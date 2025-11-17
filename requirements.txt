@@ -24,3 +24,4 @@ opencv-python-headless
 
 # 进度条
 tqdm
+nltk
