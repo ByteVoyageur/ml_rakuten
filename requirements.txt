@@ -1,0 +1,26 @@
+jupyterlab
+ipykernel
+numpy
+pandas
+scikit-learn
+matplotlib
+plotly
+seaborn
+statsmodels
+
+# NLP/文本清洗
+beautifulsoup4
+lxml
+regex
+unidecode
+ftfy
+
+# 深度学习（选装：先不装再说，避免镜像太大）
+# torch==2.4.0 torchvision==0.19.0 --extra-index-url https://download.pytorch.org/whl/cpu
+
+# 图像处理
+pillow
+opencv-python-headless
+
+# 进度条
+tqdm
