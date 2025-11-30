@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: rakuten
+    runtime: nvidia
     ports:
       - "9000:9000"
     volumes:
@@ -15,4 +16,13 @@ services:
     tty: true
     environment:
       - JUPYTER_TOKEN=rakuten123
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
     restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
