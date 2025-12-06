@@ -1,9 +1,5 @@
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential git curl unzip libgl1 libc6 libstdc++6 && \
-    rm -rf /var/lib/apt/lists/*
-
 # 在原有 apt 安装行里加上 tree
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential git curl unzip libgl1 libc6 libstdc++6 tree && \
