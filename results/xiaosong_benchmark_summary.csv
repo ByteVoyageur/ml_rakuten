@@ -1,0 +1,6 @@
+Configuration,F1 Score,Δ vs Baseline,Δ vs Traditional,Phase
+baseline_raw,0.791929,+0.000000 (+0.00%),-0.010467 (-1.30%),Phase 1
+traditional_cleaning,0.802396,+0.010467 (+1.32%),+0.000000 (+0.00%),Phase 1
+optimized_traditional,0.802396,+0.010467 (+1.32%),+0.000000 (+0.00%),Phase 2
+champion_candidate,0.802301,+0.010371 (+1.31%),-0.000095 (-0.01%),Phase 2
+deep_clean_structure,0.801541,+0.009612 (+1.21%),-0.000854 (-0.11%),Phase 2

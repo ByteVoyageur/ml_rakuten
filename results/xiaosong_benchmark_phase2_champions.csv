@@ -1,0 +1,4 @@
+experiment,group,f1_weighted,accuracy,delta_f1,delta_pct
+optimized_traditional,8_Phase2,0.8023957596067192,0.8014601978332548,0.0,0.0
+champion_candidate,8_Phase2,0.8023005162937481,0.8015190767781442,0.0,0.0
+deep_clean_structure,8_Phase2,0.8015413735542463,0.8006358926048045,0.0,0.0

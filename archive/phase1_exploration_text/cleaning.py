@@ -207,9 +207,6 @@ def tag_years(text):
     return s
 
 
-
-
-
 def nettoyer_texte(text):
     if pd.isna(text):
         return ""
@@ -254,6 +251,7 @@ def get_word_freq_with_nltk_stopwords(series, stopwords_set=None):
 
 def global_text_cleaner(
     text,
+    use_basic_cleaning: bool = True,
     normalize_x_dimensions: bool = True,
     normalize_units: bool = True,
     normalize_durations: bool = True,
@@ -273,6 +271,38 @@ def global_text_cleaner(
     s = str(text)
 
     # ------------------------------------------------------------------
+    # 2) nettoyage basique: HTML, unicode, punctuation, lowercase
+    # ------------------------------------------------------------------
+    # Remove HTML tags
+    if use_basic_cleaning:
+        s = reg.sub(r"<[^>]+>", " ", s)
+
+        # Decode HTML entities
+        s = html.unescape(s)
+
+        # Fix broken encodings
+        s = fix_text(s)
+
+        # Normalize Unicode
+        s = unicodedata.normalize("NFC", s)
+
+        # Keep decimal points in numbers, remove others like ". xxx"
+        s = reg.sub(r"(?<!\d)\.(?!\d)", " ", s)
+
+        # Remove isolated hyphens / colons / middle dots / slashes / plus signs
+        s = reg.sub(r"(?<!\S)-(?!\S)", " ", s)
+        s = reg.sub(r"(?<!\S):(?!\S)", " ", s)
+        s = reg.sub(r"(?<!\S)·(?!\S)", " ", s)
+        s = reg.sub(r"(?<!\S)/(?!\S)", " ", s)
+        s = reg.sub(r"(?<!\S)\+(?!\S)", " ", s)
+        s = s.replace("////", " ")
+
+
+     # Lowercase ou pas
+    if lowercase:
+        s = s.lower()
+
+    # ------------------------------------------------------------------
     # 1) Structurel merges
     # ------------------------------------------------------------------
     if normalize_x_dimensions:
@@ -290,35 +320,9 @@ def global_text_cleaner(
     if tag_year_numbers:
         s = tag_years(s)
 
-    # ------------------------------------------------------------------
-    # 2) nettoyage basique: HTML, unicode, punctuation, lowercase
-    # ------------------------------------------------------------------
-    # Remove HTML tags
-    s = reg.sub(r"<[^>]+>", " ", s)
+    
 
-    # Decode HTML entities
-    s = html.unescape(s)
-
-    # Fix broken encodings
-    s = fix_text(s)
-
-    # Normalize Unicode
-    s = unicodedata.normalize("NFC", s)
-
-    # Keep decimal points in numbers, remove others like ". xxx"
-    s = reg.sub(r"(?<!\d)\.(?!\d)", " ", s)
-
-    # Remove isolated hyphens / colons / middle dots / slashes / plus signs
-    s = reg.sub(r"(?<!\S)-(?!\S)", " ", s)
-    s = reg.sub(r"(?<!\S):(?!\S)", " ", s)
-    s = reg.sub(r"(?<!\S)·(?!\S)", " ", s)
-    s = reg.sub(r"(?<!\S)/(?!\S)", " ", s)
-    s = reg.sub(r"(?<!\S)\+(?!\S)", " ", s)
-    s = s.replace("////", " ")
-
-    # Lowercase ou pas
-    if lowercase:
-        s = s.lower()
+   
 
     # ------------------------------------------------------------------
     # 3) boilerplate phrases
