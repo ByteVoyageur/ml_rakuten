@@ -1,182 +1,123 @@
-# Projet Rakuten - Classification de Produits E-commerce
+Projet Rakuten – Classification de Produits
 
-Système de classification automatique de produits Rakuten utilisant des techniques de Machine Learning sur texte et images.
+Ce dépôt rassemble le travail mené autour de la classification automatique des produits Rakuten, en utilisant les informations texte (désignation + description) et, dans un second temps, les images.
+L’objectif est avant tout pratique : comprendre le jeu de données, construire des pipelines propres et comparer différentes stratégies de prétraitement et de modélisation.
 
-## 📁 Structure du Projet
-
-```
+Structure du projet
 rakuten/
-├── archive/
-│   └── phase1_exploration_text/     # Code exploratoire archivé (Phase 1)
-├── data/                            # Datasets Rakuten
-│   ├── X_train_update.csv
-│   └── Y_train_CVw08PX.csv
-├── notebooks/
-│   ├── 01_Text_Preprocessing_Benchmark.ipynb  # Notebook de démonstration (Phase 1)
-│   └── archive/                     # Anciens notebooks exploratoires
+├── data/                    # Fichiers d’entraînement
+├── notebooks/               # Notebooks d’exploration et de tests
 ├── src/
-│   └── rakuten_text/               # Bibliothèque de prétraitement de texte
-│       ├── __init__.py
-│       ├── preprocessing.py        # ✅ Fonctions de nettoyage (Phase 1 - STABLE)
-│       ├── benchmark.py            # ✅ Outils de benchmark (Phase 1 - STABLE)
-│       ├── README.md               # Documentation du module
-│       └── ...
-├── results/                        # Résultats des expériences
-├── scripts/                        # Scripts utilitaires
-├── models/                         # Modèles sauvegardés
-└── README.md                       # Ce fichier
-```
+│   └── rakuten_text/        # Code de nettoyage et fonctions utilitaires
+├── models/                  # Modèles entraînés
+├── results/                 # Résultats des benchmarks
+└── README.md
 
-## 🎯 Objectif
 
-Classifier automatiquement les produits Rakuten dans **27 catégories** en utilisant :
-- **Texte** : Désignation + Description des produits
-- **Images** : Photos des produits (phase en cours)
+Les notebooks plus anciens ou trop expérimentaux sont déplacés dans archive/ pour ne pas polluer le dossier principal.
 
-## 📊 État d'Avancement
+Objectif général
 
-### ✅ Phase 1 : Prétraitement de Texte (TERMINÉE)
+Le jeu de données contient environ 85k produits appartenant à 27 catégories.
+Le premier axe de travail a consisté à nettoyer et structurer le texte pour obtenir une baseline stable.
+Les expérimentations sur les images sont en cours et seront intégrées progressivement.
 
-**Résultats clés :**
-- **Baseline** : F1 = 0.7921
-- **Meilleure stratégie** : `optimized_traditional` → **F1 = 0.8024** (+1.32%)
-- **22 stratégies** de nettoyage comparées sur 84,916 échantillons
+État d’avancement
+Phase 1 — Prétraitement du texte (terminée)
 
-**Pipeline gagnant :**
-1. Correction d'encodage (ftfy)
-2. Décodage entités HTML
-3. Normalisation Unicode
-4. Suppression balises HTML
-5. Conversion en minuscules
-6. Suppression ponctuation isolée
-7. Suppression mots vides (FR + EN)
+L’essentiel du travail a porté sur :
 
-**Fonction de production :** `final_text_cleaner()` dans `src/rakuten_text/preprocessing.py`
+la correction des problèmes d’encodage,
 
-**Notebook de référence :** `notebooks/01_Text_Preprocessing_Benchmark.ipynb`
+la gestion des balises HTML,
 
-### 🔄 Phase 2 : Traitement d'Images (EN COURS)
+la normalisation Unicode,
 
-Exploration des features visuelles et architectures CNN/Transfer Learning.
+les stopwords français/anglais,
 
-### 📋 Phase 3 : Modélisation Avancée (PLANIFIÉE)
+plusieurs stratégies de nettoyage plus ou moins agressives.
 
-- Ensembles multi-modaux (texte + image)
-- Fine-tuning de modèles transformer
-- Optimisation hyperparamètres
+Au total, 22 configurations ont été comparées de manière systématique.
 
-## 🚀 Démarrage Rapide
+Quelques repères :
 
-### Installation
+Baseline (texte brut) : F1 = 0.7921
 
-```bash
-# Cloner le repo
+Stratégie retenue : 0.8024
+
+Le pipeline final est disponible via
+src/rakuten_text/preprocessing.py → final_text_cleaner()
+
+Le notebook qui résume les tests :
+notebooks/01_Text_Preprocessing_Benchmark.ipynb
+
+Phase 2 — Images (en cours)
+
+Exploration des caractéristiques visuelles, tests HOG / CNN légers, comparaison de tailles d’images, etc.
+Rien de figé pour l’instant : c’est en construction.
+
+Phase 3 — Modélisation (à venir)
+
+Combiner texte + image, tester quelques modèles plus modernes, comparer différentes approches d’ensemble.
+On avancera selon les besoins et le temps disponible.
+
+Prise en main rapide
+Installation
 git clone <url>
 cd rakuten
-
-# Installer les dépendances
 pip install -r requirements.txt
 
-# Télécharger les données NLTK (pour les stopwords)
+# Stopwords pour NLTK
 python -c "import nltk; nltk.download('stopwords')"
-```
 
-### Utilisation de la Bibliothèque de Texte
-
-```python
+Nettoyer un texte
 from src.rakuten_text.preprocessing import final_text_cleaner
 
-# Nettoyer un texte produit
-text = "<p>Ordinateur <strong>portable</strong> HP 15.6 pouces - 299,99&nbsp;€</p>"
-cleaned = final_text_cleaner(text)
-print(cleaned)
-# Output: "ordinateur portable hp 15.6 pouces 299,99 €"
-```
+txt = "<p>Ordinateur portable HP 15.6 pouces - 299,99&nbsp;€</p>"
+print(final_text_cleaner(txt))
 
-### Exécuter le Benchmark
+Lancer un benchmark complet
+from src.rakuten_text.benchmark import load_dataset, run_benchmark
 
-```python
-from src.rakuten_text.benchmark import load_dataset, run_benchmark, analyze_results
+df = load_dataset("data")
+results = run_benchmark(df)
+print(results.head())
 
-# Charger les données
-df = load_dataset(data_dir="data")
+Le code principal
+preprocessing.py
 
-# Exécuter le benchmark
-results_df = run_benchmark(df, verbose=True)
+Contient :
 
-# Analyser les résultats
-analyze_results(results_df, top_n=10)
-```
+clean_text() : fonction flexible, utile pour tester de nouvelles options,
 
-**Note :** Voir le notebook `notebooks/01_Text_Preprocessing_Benchmark.ipynb` pour un exemple complet.
+final_text_cleaner() : la version “production”, issue des comparaisons,
 
-## 📚 Documentation
+quelques helpers pour l'encodage, le HTML, la ponctuation, etc.
 
-### Modules Principaux
+benchmark.py
 
-#### `src/rakuten_text/preprocessing.py`
-- `clean_text()` : Fonction modulaire avec options configurables (pour expérimentations)
-- `final_text_cleaner()` : Pipeline optimisé pour production (configuration gagnante)
-- `get_available_options()` : Liste toutes les options de nettoyage disponibles
+Permet :
 
-#### `src/rakuten_text/benchmark.py`
-- `load_dataset()` : Charge les données Rakuten
-- `define_experiments()` : Définit les configurations d'expériences
-- `run_benchmark()` : Exécute le benchmark complet
-- `analyze_results()` : Analyse et visualise les résultats
-- `save_results()` : Sauvegarde les résultats en CSV
+de charger le dataset dans un format propre,
 
-## 🧪 Tests et Expérimentations
+de définir les expériences,
 
-Pour tester différentes stratégies de prétraitement :
+d’exécuter toutes les variantes,
 
-```python
-from src.rakuten_text.preprocessing import clean_text
+d’enregistrer les résultats.
 
-# Tester une configuration custom
-text = "Votre texte ici"
-cleaned = clean_text(
-    text,
-    fix_encoding=True,
-    remove_html_tags=True,
-    lowercase=True,
-    remove_stopwords=True
-)
-```
+Quelques résultats (texte)
+Stratégie	F1
+Texte brut	0.7921
+Nettoyage “traditionnel”	0.8024
+Nettoyage conservateur	0.7985
 
-## 📈 Résultats de Benchmark
+Les détails complets sont stockés dans results/benchmark_results.csv.
 
-| Stratégie | F1 Score | Amélioration vs Baseline |
-|-----------|----------|-------------------------|
-| baseline_raw | 0.7921 | - |
-| traditional_cleaning | **0.8024** | **+1.32%** |
-| conservative_cleaning | 0.7985 | +0.81% |
-| all_encoding_fixes | 0.7931 | +0.13% |
+Remarques
 
-**Détails complets :** Voir `results/benchmark_results.csv` ou le notebook de démonstration.
+Tous les commentaires dans src/ sont en français pour garder une cohérence.
 
-## 🗂️ Archives
+Les expériences utilisent un random_state=42 pour limiter les surprises.
 
-Les fichiers exploratoires de la Phase 1 sont archivés dans `archive/phase1_exploration_text/` :
-- Notebooks d'exploration
-- Scripts de tests
-- Anciennes versions de code
-
-## 👥 Contributeurs
-
-- **Xiaosong** : Développement et expérimentations
-
-## 📝 Notes Importantes
-
-- **Langue** : Tous les commentaires et docstrings dans `src/` sont en **français** pour faciliter la collaboration
-- **Reproductibilité** : Tous les benchmarks utilisent `random_state=42` pour garantir la reproductibilité
-- **Performance** : Le pipeline de production est optimisé pour le e-commerce français (mots vides FR + EN)
-
-## 📄 Licence
-
-Ce projet est destiné à des fins éducatives et de recherche.
-
----
-
-**Dernière mise à jour** : 2025-12-07
-**Version** : 1.0 (Phase 1 terminée)
+Le but n’est pas de battre un leaderboard, mais de construire un pipeline clair, reproductible et adaptable.
