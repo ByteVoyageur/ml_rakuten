@@ -5,13 +5,94 @@ L’objectif est surtout pratique : comprendre le jeu de données, tester diffé
 
 📁 Structure du projet
 rakuten/
-├── data/                   # Fichiers d’entraînement
-├── notebooks/              # Notebooks d’exploration et de tests
+├── archive/
+│   └── phase1_exploration_text/     # Code exploratoire archivé (Phase 1)
+├── data/                            # Datasets Rakuten
+│   ├── X_train_update.csv
+│   └── Y_train_CVw08PX.csv
+├── notebooks/
+│   ├── 00_text_exploration.ipynb             # Exploration initiale
+│   ├── 01_Text_Preprocessing_Benchmark.ipynb # Phase 1: Preprocessing
+│   ├── 02_Vectorization_Strategies.ipynb     # Phase 2: Vectorization
+│   ├── 03_Model_Selection.ipynb              # Phase 2: Model Selection
+│   └── archive/                              # Anciens notebooks
 ├── src/
-│   └── rakuten_text/       # Code de nettoyage et utilitaires
-├── models/                 # Modèles entraînés
-├── results/                # Résultats et tableaux de benchmark
-└── README.md
+│   └── rakuten_text/               # Bibliothèque modulaire de ML texte
+│       ├── __init__.py
+│       ├── preprocessing.py        # ✅ Nettoyage de texte (Phase 1)
+│       ├── benchmark.py            # ✅ Benchmark preprocessing (Phase 1)
+│       ├── features.py             # ✅ Features manuelles (Phase 2)
+│       ├── vectorization.py        # ✅ TF-IDF/Count + weighting (Phase 2)
+│       ├── experiments.py          # ✅ Expérimentations systématiques (Phase 2)
+│       ├── models.py               # ✅ Pipelines ML (Phase 2)
+│       ├── categories.py           # ✅ Mapping 27 catégories (Phase 2)
+│       
+├── results/
+│   ├── configs/                    # Configurations optimales
+│   └── models/                     # Modèles entraînés
+└── README.md                       # Ce fichier
+```
+
+## 🎯 Objectif
+
+Classifier automatiquement les produits Rakuten dans **27 catégories** en utilisant :
+- **Texte** : Désignation + Description des produits
+- **Images** : Photos des produits (phase en cours)
+
+## 📊 État d'Avancement
+
+### ✅ Phase 1 : Prétraitement de Texte (TERMINÉE)
+
+**Résultats clés :**
+- **Baseline raw** : F1 = 0.7919
+- **Meilleure stratégie** : `final_text_cleaner()` → **F1 = 0.8024** (+1.32%)
+- **22 stratégies** de nettoyage comparées sur 84,916 échantillons
+
+**Fonction de production :** `final_text_cleaner()` dans `src/rakuten_text/preprocessing.py`
+
+**Notebook :** `notebooks/01_Text_Preprocessing_Benchmark.ipynb`
+
+### ✅ Phase 2 : Vectorization & Modèles Texte (TERMINÉE)
+
+**Résultats clés :**
+- **Configuration optimale** : TF-IDF Split + features manuelles + title weighting
+- **Performance** : F1 = 0.8420 (+6.33% vs baseline)
+- **Hyperparamètres** : max_features=20k, ngram_range=(1,2), split_size=0.15
+
+**Expérimentations réalisées :**
+1. Count vs TF-IDF vectorization
+2. Split vs Merged text strategies
+3. Manual features extraction (24 features)
+4. **Title weighting** (1x-3x importance)
+5. Hyperparameter grid search
+6. Model comparison (LogReg, SVM, XGBoost, RF)
+
+**Modules créés :**
+- `vectorization.py` : TF-IDF/Count + FeatureWeighter (title weighting)
+- `features.py` : 24 features manuelles textuelles
+- `experiments.py` : Framework complet d'expérimentation + tracking + reporting
+- `models.py` : Pipelines ML (LogReg, SVM, XGBoost, RF)
+- `categories.py` : Mapping 27 catégories + noms courts
+
+**Fonctionnalités clés :**
+- ✅ Title weighting automatique (1x-3x)
+- ✅ Tracking global des scores (tous les modèles)
+- ✅ Vérification d'optimalité automatique
+- ✅ Génération de rapports formatés
+
+**Notebooks :**
+- `02_Vectorization_Strategies.ipynb`
+- `03_Model_Selection.ipynb`
+
+### 🔄 Phase 3 : Traitement d'Images (EN COURS)
+
+Exploration des features visuelles et architectures CNN/Transfer Learning.
+
+### 📋 Phase 4 : Fusion Multimodale (PLANIFIÉE)
+
+- Ensembles multi-modaux (texte + image)
+- Fine-tuning de modèles transformer
+- Optimisation hyperparamètres
 
 
 Les notebooks trop anciens ou expérimentaux sont déplacés dans archive/ pour garder une arborescence propre.
@@ -86,6 +167,3 @@ from src.rakuten_text.benchmark import load_dataset, run_benchmark
 df = load_dataset("data")
 results = run_benchmark(df)
 print(results.head())
-
-
-Les résultats complets sont enregistrés dans results/benchmark_results.csv.

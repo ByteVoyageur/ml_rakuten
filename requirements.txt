@@ -1,3 +1,4 @@
+# Core ML & Data Science
 jupyterlab
 ipykernel
 numpy
@@ -7,24 +8,26 @@ matplotlib
 plotly
 seaborn
 statsmodels
+xgboost
 
-# NLP/文本清洗
+# NLP
 beautifulsoup4
 lxml
 regex
 unidecode
 ftfy
 
-# 深度学习 (GPU 版本 - CUDA 12.1)
+# image
+pillow
+opencv-python-headless
+
+# bar progress
+tqdm
+nltk
+
+# Deep Learning (GPU - CUDA 12.1)
+# Note: PyTorch is installed separately in Dockerfile with CUDA support
 torch
 torchvision
 torchaudio
 --index-url https://download.pytorch.org/whl/cu121
-
-# 图像处理
-pillow
-opencv-python-headless
-
-# 进度条
-tqdm
-nltk

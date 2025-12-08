@@ -9,18 +9,6 @@ from .preprocessing import clean_text, get_available_options
 
 
 def load_dataset(data_dir="../data"):
-    """
-    Charger le dataset Rakuten et créer la colonne text_raw.
-
-    Args:
-        data_dir: Chemin vers le répertoire de données
-
-    Returns:
-        pd.DataFrame: Dataset avec colonnes incluant 'text_raw' et 'prdtypecode'
-    """
-    print("=" * 80)
-    print("Chargement du dataset Rakuten...")
-    print("=" * 80)
 
     X_train = pd.read_csv(f"{data_dir}/X_train_update.csv", index_col=0)
     Y_train = pd.read_csv(f"{data_dir}/Y_train_CVw08PX.csv", index_col=0)
@@ -32,12 +20,6 @@ def load_dataset(data_dir="../data"):
         df["designation"].fillna("").astype(str).str.strip() + " " +
         df["description"].fillna("").astype(str).str.strip()
     ).str.strip()
-
-    print(f"✓ Dataset chargé : {df.shape[0]:,} échantillons")
-    print(f"✓ Colonnes : {df.columns.tolist()}")
-    print(f"✓ Classes : {df['prdtypecode'].nunique()} types de produits uniques")
-    print(f"✓ Text_raw créé (longueur moyenne : {df['text_raw'].str.len().mean():.0f} caractères)")
-    print()
 
     return df
 
@@ -218,7 +200,7 @@ def define_experiments():
 def run_benchmark(
     df,
     experiments=None,
-    test_size=0.2,
+    test_size=0.15,
     random_state=42,
     tfidf_max_features=10000,
     tfidf_ngram_range=(1, 2),
@@ -370,13 +352,6 @@ def run_benchmark(
 
 
 def analyze_results(results_df, top_n=10):
-    """
-    Afficher une analyse détaillée des résultats du benchmark.
-
-    Args:
-        results_df: DataFrame de résultats de run_benchmark()
-        top_n: Nombre d'expériences top/bottom à mettre en évidence
-    """
     print("\n" + "=" * 80)
     print("ANALYSE DES RÉSULTATS DU BENCHMARK")
     print("=" * 80)
@@ -418,13 +393,8 @@ def analyze_results(results_df, top_n=10):
     print("=" * 80)
 
 
-def save_results(results_df, output_path="benchmark_results.csv"):
-    """
-    Sauvegarder les résultats du benchmark en CSV.
-
-    Args:
-        results_df: DataFrame de résultats
-        output_path: Chemin du fichier de sortie
-    """
+def save_results(results_df, output_path="results/benchmark_results.csv"):
+    import os
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     results_df.to_csv(output_path, index=False)
     print(f"✓ Résultats sauvegardés dans : {output_path}")
