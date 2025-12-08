@@ -168,3 +168,4 @@ data/
 # Cleaned CSV exports (do not track in git)
 notebooks/rakuten_text_clean_full_v1.csv
 notebooks/rakuten_text_train_v1.csv
+notebooks/archive/
