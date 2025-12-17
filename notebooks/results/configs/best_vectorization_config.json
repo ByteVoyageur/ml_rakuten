@@ -23,19 +23,19 @@
   "max_features_desc": 20000,
   "ngram_range": [
     1,
-    2
+    1
   ],
   "title_weight": 1.5,
   "min_df": 2,
   "max_df": 0.95,
   "metadata": {
-    "f1_score": 0.8420117382030177,
-    "accuracy": 0.8412623645784267,
-    "train_time": 42.77885556221008,
+    "f1_score": 0.8444250620814834,
+    "accuracy": 0.844559585492228,
+    "train_time": 38.609853744506836,
     "notebook": "02_Vectorization_Strategies.ipynb",
     "baseline_f1": 0.7925,
-    "improvement_pct": 6.247537943598446,
+    "improvement_pct": 6.5520583068117855,
     "title_weight": 1.5
   },
-  "saved_at": "2025-12-08T16:02:55.995592"
+  "saved_at": "2025-12-09T18:11:42.187017"
 }

@@ -21,7 +21,6 @@ from .preprocessing import (
     clean_text,
     get_available_options,
     print_available_options,
-    NLTK_STOPWORDS,
     PUNCTUATION,
     BOILERPLATE_PHRASES,
 )
@@ -82,7 +81,6 @@ from .categories import (
     get_all_categories,
     get_category_codes,
     get_category_group,
-    format_category_label,
     map_categories_in_dataframe,
     get_category_distribution,
     validate_category_code,
@@ -159,7 +157,6 @@ __all__ = [
     "get_all_categories",
     "get_category_codes",
     "get_category_group",
-    "format_category_label",
     "map_categories_in_dataframe",
     "get_category_distribution",
     "validate_category_code",

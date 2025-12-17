@@ -5,7 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      network: host
     container_name: rakuten
+    ipc: host
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     runtime: nvidia
     ports:
       - "9000:9000"

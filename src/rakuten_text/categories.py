@@ -97,23 +97,6 @@ def get_category_group(code: int) -> Optional[str]:
     return None
 
 
-def format_category_label(code: int,
-                          show_code: bool = True,
-                          short: bool = False,
-                          max_length: Optional[int] = None) -> str:
-    name = get_category_name(code, short=short)
-
-    if show_code:
-        label = f"{code}: {name}"
-    else:
-        label = name
-
-    if max_length and len(label) > max_length:
-        label = label[:max_length-3] + "..."
-
-    return label
-
-
 def map_categories_in_dataframe(df: pd.DataFrame,
                                  code_column: str = 'prdtypecode',
                                  target_column: str = 'category_name',

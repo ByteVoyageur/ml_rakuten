@@ -1,25 +1,25 @@
 experiment,f1_score,accuracy,vectorizer,max_features,ngram_range,title_weight,use_features,model,strategy
-exp4_grid_search,0.8420117382030177,0.8412623645784267,tfidf,20000.0,"(1, 2)",1.5,True,logreg,
-exp4_grid_search,0.8408631017145387,0.8400847856806406,tfidf,20000.0,"(1, 1)",1.5,True,logreg,
-exp4_grid_search,0.8406818497717692,0.8400062804207882,tfidf,20000.0,"(1, 3)",1.5,True,logreg,
-exp4_grid_search,0.8405850430056703,0.8400062804207882,tfidf,15000.0,"(1, 2)",1.5,True,logreg,
-exp4_grid_search,0.8398174450719001,0.839221227822264,tfidf,15000.0,"(1, 1)",1.5,True,logreg,
-exp4_grid_search,0.8366322070738047,0.8360025121683152,tfidf,15000.0,"(1, 3)",1.5,True,logreg,
-exp4_grid_search,0.8361109476836889,0.8356099858690532,tfidf,10000.0,"(1, 1)",1.5,True,logreg,
-exp4_grid_search,0.8352167876809522,0.8343539017114147,tfidf,10000.0,"(1, 2)",1.5,True,logreg,
-exp4_grid_search,0.8341251244631758,0.8331763228136285,tfidf,10000.0,"(1, 3)",1.5,True,logreg,
-exp2b_title_weighting,0.8309655664490859,0.8299576071596797,tfidf,10000.0,"(1, 2)",1.5,False,logreg,
-exp3_manual_features,0.8293022971558272,0.8280734809232219,tfidf,,,,True,logreg,Indicateurs + TF-IDF
-exp2b_title_weighting,0.8289403437813654,0.827916470403517,tfidf,10000.0,"(1, 2)",2.0,False,logreg,
-exp2b_title_weighting,0.8271663997553357,0.826189354686764,tfidf,10000.0,"(1, 2)",2.5,False,logreg,
-exp3_manual_features,0.8250089908918059,0.823520175851782,tfidf,,,,False,logreg,TF-IDF seul
-exp1_count_vs_tfidf,0.8250089908918059,0.823520175851782,,,,,,,
-exp2b_title_weighting,0.8250089908918059,0.823520175851782,tfidf,10000.0,"(1, 2)",1.0,False,logreg,
-exp4_grid_search,0.8241218942178031,0.8232846600722249,tfidf,5000.0,"(1, 1)",1.5,True,logreg,
-exp2b_title_weighting,0.8231821213516074,0.8221070811744386,tfidf,10000.0,"(1, 2)",3.0,False,logreg,
-exp3_manual_features,0.8231528485667327,0.8211650180562098,count,,,,True,logreg,Indicateurs + CountVectorizer
-exp4_grid_search,0.8206228286549684,0.819673418119014,tfidf,5000.0,"(1, 2)",1.5,True,logreg,
-exp4_grid_search,0.8206151282583076,0.8195164075993091,tfidf,5000.0,"(1, 3)",1.5,True,logreg,
-exp1_count_vs_tfidf,0.8187273577042894,0.8159836709059507,,,,,,,
-exp3_manual_features,0.8187273577042894,0.8159836709059507,count,,,,False,logreg,CountVectorizer seul
+exp4_grid_search,0.8444250620814834,0.844559585492228,tfidf,20000.0,"(1, 1)",1.5,True,logreg,
+exp4_grid_search,0.8427546366714648,0.8425969539959177,tfidf,20000.0,"(1, 3)",1.5,True,logreg,
+exp4_grid_search,0.8421187918674579,0.8422829329565081,tfidf,15000.0,"(1, 1)",1.5,True,logreg,
+exp4_grid_search,0.8417439996530262,0.8416548908776889,tfidf,20000.0,"(1, 2)",1.5,True,logreg,
+exp4_grid_search,0.8404027584284233,0.8403988067200503,tfidf,15000.0,"(1, 2)",1.5,True,logreg,
+exp4_grid_search,0.839692582623986,0.8399277751609358,tfidf,10000.0,"(1, 1)",1.5,True,logreg,
+exp4_grid_search,0.839349383957273,0.8392997330821165,tfidf,15000.0,"(1, 3)",1.5,True,logreg,
+exp4_grid_search,0.8367225150885386,0.8367875647668394,tfidf,10000.0,"(1, 2)",1.5,True,logreg,
+exp2b_title_weighting,0.8343176939167902,0.8341968911917098,tfidf,10000.0,"(1, 2)",1.5,False,logreg,
+exp2b_title_weighting,0.833472130260798,0.8333333333333334,tfidf,10000.0,"(1, 2)",2.0,False,logreg,
+exp4_grid_search,0.8332764202296843,0.8333333333333334,tfidf,10000.0,"(1, 3)",1.5,True,logreg,
+exp3_manual_features,0.831567058083419,0.8316062176165803,tfidf,,,,True,logreg,Indicateurs + TF-IDF
+exp2b_title_weighting,0.8310663398007561,0.8308211650180563,tfidf,10000.0,"(1, 2)",2.5,False,logreg,
+exp4_grid_search,0.8275655863827471,0.8276809546239599,tfidf,5000.0,"(1, 1)",1.5,True,logreg,
+exp2b_title_weighting,0.8268890678325225,0.826581880986026,tfidf,10000.0,"(1, 2)",3.0,False,logreg,
+exp1_count_vs_tfidf,0.8263275414474609,0.8262678599466164,,,,,,,
+exp3_manual_features,0.8263275414474609,0.8262678599466164,tfidf,,,,False,logreg,TF-IDF seul
+exp2b_title_weighting,0.8263275414474609,0.8262678599466164,tfidf,10000.0,"(1, 2)",1.0,False,logreg,
+exp3_manual_features,0.8254744064236469,0.824462238970011,count,,,,True,logreg,Indicateurs + CountVectorizer
+exp4_grid_search,0.8232313956351764,0.8233631653320772,tfidf,5000.0,"(1, 2)",1.5,True,logreg,
+exp1_count_vs_tfidf,0.8207749773845575,0.8192808918197519,,,,,,,
+exp3_manual_features,0.8207749773845575,0.8192808918197519,count,,,,False,logreg,CountVectorizer seul
+exp4_grid_search,0.820271703154328,0.8203799654576857,tfidf,5000.0,"(1, 3)",1.5,True,logreg,
 exp3_manual_features,0.2921526361399203,0.3398492699010834,None,,,,True,logreg,Indicateurs seuls

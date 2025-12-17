@@ -24,10 +24,9 @@ opencv-python-headless
 # bar progress
 tqdm
 nltk
+ipywidgets
 
-# Deep Learning (GPU - CUDA 12.1)
-# Note: PyTorch is installed separately in Dockerfile with CUDA support
+#DeepLearning
+transformers
 torch
-torchvision
-torchaudio
---index-url https://download.pytorch.org/whl/cu121
+timm
