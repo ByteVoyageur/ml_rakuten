@@ -87,17 +87,6 @@ def get_available_models():
     return ['logreg', 'svm', 'xgboost', 'rf']
 
 
-def get_model_info(model_name):
-
-    info = {
-        'logreg': "Régression Logistique: Modèle linéaire baseline, rapide et interprétable.",
-        'svm': "SVM Linéaire: Maximisation de marge, efficace pour espaces haute dimension.",
-        'xgboost': "XGBoost: Gradient Boosting, capture des interactions non-linéaires complexes.",
-        'rf': "Random Forest: Ensemble d'arbres, robuste et parallélisable."
-    }
-    return info.get(model_name.lower(), "Modèle inconnu")
-
-
 
 def build_full_pipeline(vectorizer, model_name='logreg', random_state=42, **model_kwargs):
 

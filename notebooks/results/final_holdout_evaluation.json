@@ -1,0 +1,7 @@
+{
+  "best_strategy": "baseline_raw",
+  "f1_dev": 0.785899500591952,
+  "f1_holdout": 0.7823448267659819,
+  "difference": -0.0035546738259700783,
+  "baseline_f1": 0.785899500591952
+}

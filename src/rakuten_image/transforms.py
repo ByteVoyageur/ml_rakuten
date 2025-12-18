@@ -76,43 +76,6 @@ def get_val_transforms(img_size: int = 224):
     return transforms.Compose(transform_list)
 
 
-def get_tta_transforms(img_size: int = 224):
-    """
-    Get Test-Time Augmentation (TTA) transforms for ensemble predictions.
-    Returns a list of different transformations to apply at inference time.
-
-    Args:
-        img_size: Target image size
-
-    Returns:
-        list: List of torchvision.transforms.Compose objects
-    """
-    # Original (center crop)
-    original = transforms.Compose([
-        transforms.Resize((img_size, img_size)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-
-    # Horizontal flip
-    h_flip = transforms.Compose([
-        transforms.Resize((img_size, img_size)),
-        transforms.RandomHorizontalFlip(p=1.0),  # Always flip
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-
-    # Slightly larger crop (multi-scale)
-    multi_scale = transforms.Compose([
-        transforms.Resize((int(img_size * 1.1), int(img_size * 1.1))),
-        transforms.CenterCrop(img_size),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-
-    return [original, h_flip, multi_scale]
-
-
 # Example usage and verification
 if __name__ == "__main__":
     from PIL import Image

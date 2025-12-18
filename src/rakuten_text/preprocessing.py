@@ -152,7 +152,7 @@ def clean_text(
 
         for token in tokens:
             # Filtre : mots vides
-            if remove_stopwords and token.lower() in NLTK_STOPWORDS:
+            if remove_stopwords and token.lower() in get_nltk_stopwords():
                 continue
 
             # Filtre : lettres isolées
@@ -190,7 +190,7 @@ def final_text_cleaner(text):
     s = unicodedata.normalize("NFC", s)
 
     # 2) Remove HTML tags
-    #s = reg.sub(r"<[^>]+>", " ", s)
+    s = reg.sub(r"<[^>]+>", " ", s)
 
     # 3) Lowercase
     s = s.lower()
