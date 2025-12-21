@@ -24,97 +24,76 @@ except ImportError:
         print("⚠ Warning: Neither torchvision ViT nor timm available. ViTClassifier may not work.")
 
 
+
 class ResNet50Classifier(nn.Module):
     """
-    ResNet50-based image classifier with custom head.
-
-    Architecture:
-    - Backbone: ResNet50 pretrained on ImageNet (frozen initially)
-    - Custom Head: Linear(2048 -> 512) -> ReLU -> BatchNorm -> Dropout(0.3) -> Linear(512 -> num_classes)
-
-    Args:
-        num_classes (int): Number of output classes
-        freeze_backbone (bool): Whether to freeze backbone initially (default: True)
-        dropout_rate (float): Dropout probability in custom head (default: 0.3)
-
-    Example:
-        >>> model = ResNet50Classifier(num_classes=27)
-        >>> model.unfreeze_backbone()  # Unfreeze for fine-tuning
+    Custom ResNet50 Classifier with advanced fine-tuning capabilities.
+    Includes 'unfreeze_last_blocks' for staged training.
     """
-
     def __init__(self, num_classes: int, freeze_backbone: bool = True, dropout_rate: float = 0.3):
         super(ResNet50Classifier, self).__init__()
 
-        # Load pretrained ResNet50 backbone
-        self.backbone = resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+        # 1. Load the strongest available pretrained weights (IMAGENET1K_V2)
+        self.backbone = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
 
-        # Freeze backbone parameters if specified
+        # 2. Initially freeze the entire backbone if requested
         if freeze_backbone:
-            self._freeze_backbone()
+            self._freeze_all_backbone()
 
-        # Get the input features for the custom head (2048 for ResNet50)
+        # 3. Replace the original Fully Connected (fc) layer
         in_features = self.backbone.fc.in_features
-
-        # Remove the original fully connected layer
         self.backbone.fc = nn.Identity()
 
-        # Custom classification head (as per strict requirements)
+        # 4. Define a robust Custom Head
         self.custom_head = nn.Sequential(
-            nn.Linear(in_features, 512),      # 2048 -> 512
-            nn.ReLU(),                         # Activation
-            nn.BatchNorm1d(512),              # Batch normalization
-            nn.Dropout(p=dropout_rate),       # Dropout for regularization
-            nn.Linear(512, num_classes)       # 512 -> num_classes
+            nn.Linear(in_features, 512),
+            nn.ReLU(),
+            nn.BatchNorm1d(512),
+            nn.Dropout(p=dropout_rate),
+            nn.Linear(512, num_classes)
         )
 
-        self.num_classes = num_classes
-        self.freeze_backbone = freeze_backbone
+        # Handle initial unfreeze request
+        if not freeze_backbone:
+            self.unfreeze_backbone()
 
-        print(f"✓ ResNet50Classifier initialized: {num_classes} classes, backbone {'frozen' if freeze_backbone else 'trainable'}")
+        self.freeze_status = "Frozen" if freeze_backbone else "Unfrozen"
+        print(f"✓ Model Initialized: ResNet50 | Head: Custom (Dropout={dropout_rate}) | Backbone: {self.freeze_status}")
 
-    def _freeze_backbone(self):
-        """Freeze all backbone parameters (transfer learning)."""
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        features = self.backbone(x)
+        logits = self.custom_head(features)
+        return logits
+
+    def _freeze_all_backbone(self):
         for param in self.backbone.parameters():
             param.requires_grad = False
 
     def unfreeze_backbone(self):
-        """Unfreeze backbone for fine-tuning."""
+        """Unfreeze the ENTIRE backbone."""
         for param in self.backbone.parameters():
             param.requires_grad = True
-        self.freeze_backbone = False
-        print("✓ ResNet50 backbone unfrozen for fine-tuning")
+        print("✓ ACTION: Entire backbone unfrozen. Ready for deep fine-tuning.")
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def unfreeze_last_blocks(self, n: int = 1):
         """
-        Forward pass.
-
-        Args:
-            x: Input tensor of shape (batch_size, 3, H, W)
-
-        Returns:
-            Output logits of shape (batch_size, num_classes)
+        Advanced Fine-tuning Strategy: Unfreeze only the last N blocks.
+        n=1 -> Layer 4 (Recommended for Phase 2)
+        n=2 -> Layer 3 + 4 (Recommended for Phase 3)
         """
-        # Extract features from backbone
-        features = self.backbone(x)  # (batch_size, 2048)
-
-        # Pass through custom head
-        logits = self.custom_head(features)  # (batch_size, num_classes)
-
-        return logits
-
-    def get_features(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Extract feature embeddings (before final classification layer).
-
-        Args:
-            x: Input tensor of shape (batch_size, 3, H, W)
-
-        Returns:
-            Feature embeddings of shape (batch_size, 2048)
-        """
-        with torch.no_grad():
-            features = self.backbone(x)
-        return features
+        self._freeze_all_backbone()
+        
+        layers_to_unfreeze = []
+        if n >= 1: layers_to_unfreeze.append(self.backbone.layer4)
+        if n >= 2: layers_to_unfreeze.append(self.backbone.layer3)
+        if n >= 3: layers_to_unfreeze.append(self.backbone.layer2)
+        if n >= 4: layers_to_unfreeze.append(self.backbone.layer1)
+            
+        for layer in layers_to_unfreeze:
+            for param in layer.parameters():
+                param.requires_grad = True
+                
+        print(f"✓ ACTION: Unfrozen last {n} block(s). Shallow layers remain frozen.")
 
 
 class ViTClassifier(nn.Module):

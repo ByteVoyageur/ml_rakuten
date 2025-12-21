@@ -30,3 +30,4 @@ ipywidgets
 transformers
 torch
 timm
+wandb
