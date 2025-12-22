@@ -7,10 +7,7 @@ import regex as reg
 import pandas as pd
 from ftfy import fix_text
 from nltk.corpus import stopwords
-
-
-# Mots vides français + anglais
-NLTK_STOPWORDS = set(stopwords.words("french")) | set(stopwords.words("english"))
+from functools import lru_cache
 
 # Ensemble étendu de ponctuation
 PUNCTUATION = set(string.punctuation) | {
@@ -20,6 +17,23 @@ PUNCTUATION = set(string.punctuation) | {
 # Phrases répétitives courantes provenant de templates HTML
 BOILERPLATE_PHRASES = ["li li strong", "li li", "br br", "et de"]
 
+@lru_cache(maxsize=1)
+def get_nltk_stopwords() -> Set[str]:
+    """
+    Charge les stopwords de manière paresseuse (seulement quand nécessaire).
+    Télécharge automatiquement les ressources si elles sont manquantes.
+    """
+    try:
+        french = set(stopwords.words("french"))
+        english = set(stopwords.words("english"))
+        return french | english
+    except LookupError:
+        print("Resource 'stopwords' not found. Downloading now...")
+        nltk.download('stopwords', quiet=True)
+        # Réessayer après téléchargement
+        french = set(stopwords.words("french"))
+        english = set(stopwords.words("english"))
+        return french | english
 
 def clean_text(
     text,
@@ -138,7 +152,7 @@ def clean_text(
 
         for token in tokens:
             # Filtre : mots vides
-            if remove_stopwords and token.lower() in NLTK_STOPWORDS:
+            if remove_stopwords and token.lower() in get_nltk_stopwords():
                 continue
 
             # Filtre : lettres isolées
@@ -165,26 +179,26 @@ def clean_text(
 
 
 def final_text_cleaner(text):
-    
     if pd.isna(text) or text is None:
         return ""
 
     s = str(text)
 
+    # 1) Text normalization
     s = fix_text(s)
-
     s = html.unescape(s)
-
     s = unicodedata.normalize("NFC", s)
 
+    # 2) Remove HTML tags
     s = reg.sub(r"<[^>]+>", " ", s)
 
+    # 3) Lowercase
     s = s.lower()
 
-    # Supprimer les points qui ne sont pas dans les nombres : "Hello. World" → "Hello  World" (garder "3.14")
+    # 4) Remove dots that are not part of numbers ("hello. world" -> "hello  world", keep "3.14")
     s = reg.sub(r"(?<!\d)\.(?!\d)", " ", s)
 
-    # Supprimer les traits d'union/deux-points/etc isolés (mais garder "bien-connu", "3-5")
+    # 5) Remove isolated punctuation like "-" ":" "·" "/" "+" but keep things like "bien-connu", "3-5"
     s = reg.sub(r"(?<!\S)-(?!\S)", " ", s)
     s = reg.sub(r"(?<!\S):(?!\S)", " ", s)
     s = reg.sub(r"(?<!\S)·(?!\S)", " ", s)
@@ -192,23 +206,10 @@ def final_text_cleaner(text):
     s = reg.sub(r"(?<!\S)\+(?!\S)", " ", s)
     s = s.replace("////", " ")
 
-    tokens = s.split()
-    filtered = []
-
-    for token in tokens:
-        # Passer si le token est un mot vide
-        if token in NLTK_STOPWORDS:
-            continue
-
-        # Garder tous les autres tokens
-        filtered.append(token)
-
-    s = " ".join(filtered)
-
+    # 6) Final whitespace normalization
     s = reg.sub(r"\s+", " ", s).strip()
 
     return s
-
 
 
 def get_available_options():
