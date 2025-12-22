@@ -1,18 +1,15 @@
-# Projet Rakuten – Classification Multimodale de Produits (WIP)
+Projet Rakuten – Classification Multimodale de Produits (WIP)
+Présentation du projet
 
-Ce dépôt contient le code pour la classification automatique de produits Rakuten dans 27 catégories. Le projet vise à exploiter à la fois les **informations textuelles** (désignation et description) et les **images** des produits.
+Ce projet vise à mettre en place un système de classification automatique de produits Rakuten, répartis en 27 catégories.
+L’approche repose sur l’exploitation conjointe des données textuelles (titre et description) et des images produits, dans une logique de modélisation multimodale.
 
-⚠️ **État du projet** : *En cours de développement*.
-Actuellement, nous nous concentrons sur l'optimisation de la partie **Text Mining** (Nettoyage, Vectorisation, Modélisation). L'intégration des images (Computer Vision) et la fusion multimodale interviendront dans une seconde phase.
+Le travail débute par des modèles unimodaux servant de baseline, puis évolue vers des architectures profondes et des stratégies de fusion afin d’améliorer les performances globales.
 
-## 🛠 Installation et Environnement (Docker)
+⚠️ État du projet : en cours de développement
 
-Le projet est entièrement conteneurisé pour garantir la reproductibilité, notamment pour la gestion des dépendances GPU (CUDA 12.1).
+La partie image est quasiment finalisée, avec plusieurs modèles entraînés et évalués
 
-### Prérequis
-* Docker & Docker Compose
-* Drivers NVIDIA et NVIDIA Container Toolkit
+La partie texte est actuellement en phase de test et d’optimisation avec DeBERTa
 
-### Démarrage rapide
-L'environnement utilise une image Python 3.11 personnalisée avec PyTorch, JupyterLab et les outils de Data Science.
-
+La fusion multimodale sera consolidée une fois les deux branches stabilisées
