@@ -1,0 +1,30 @@
+{
+  "model_name": "resnet50_rerun_canonical",
+  "split_name": "val",
+  "split_signature": "cf53f8eb169b3531",
+  "classes_fp": "cdfa70b13f7390e6",
+  "num_classes": 27,
+  "num_samples": 10827,
+  "has_y_true": true,
+  "probs_shape": [
+    10827,
+    27
+  ],
+  "probs_dtype": "float32",
+  "created_at": "2026-01-08T18:14:40.324946",
+  "extra": {
+    "source": "src/train/image_resnet50.py",
+    "model_architecture": "torchvision.resnet50",
+    "img_dir": "/content/images/images/image_train",
+    "img_size": 224,
+    "batch_size": 512,
+    "num_epochs": 30,
+    "lr": 0.0003,
+    "use_amp": true,
+    "label_smoothing": 0.1,
+    "dropout_rate": 0.3,
+    "classes_fp": "cdfa70b13f7390e6",
+    "split_signature": "cf53f8eb169b3531",
+    "export_split": "val"
+  }
+}

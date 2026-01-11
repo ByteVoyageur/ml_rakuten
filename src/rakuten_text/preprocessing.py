@@ -7,7 +7,10 @@ import regex as reg
 import pandas as pd
 from ftfy import fix_text
 from nltk.corpus import stopwords
-from functools import lru_cache
+
+
+# Mots vides français + anglais
+NLTK_STOPWORDS = set(stopwords.words("french")) | set(stopwords.words("english"))
 
 # Ensemble étendu de ponctuation
 PUNCTUATION = set(string.punctuation) | {
@@ -17,23 +20,6 @@ PUNCTUATION = set(string.punctuation) | {
 # Phrases répétitives courantes provenant de templates HTML
 BOILERPLATE_PHRASES = ["li li strong", "li li", "br br", "et de"]
 
-@lru_cache(maxsize=1)
-def get_nltk_stopwords() -> Set[str]:
-    """
-    Charge les stopwords de manière paresseuse (seulement quand nécessaire).
-    Télécharge automatiquement les ressources si elles sont manquantes.
-    """
-    try:
-        french = set(stopwords.words("french"))
-        english = set(stopwords.words("english"))
-        return french | english
-    except LookupError:
-        print("Resource 'stopwords' not found. Downloading now...")
-        nltk.download('stopwords', quiet=True)
-        # Réessayer après téléchargement
-        french = set(stopwords.words("french"))
-        english = set(stopwords.words("english"))
-        return french | english
 
 def clean_text(
     text,
@@ -152,7 +138,7 @@ def clean_text(
 
         for token in tokens:
             # Filtre : mots vides
-            if remove_stopwords and token.lower() in get_nltk_stopwords():
+            if remove_stopwords and token.lower() in NLTK_STOPWORDS:
                 continue
 
             # Filtre : lettres isolées
